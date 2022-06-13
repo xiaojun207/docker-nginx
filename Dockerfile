@@ -12,7 +12,6 @@ RUN set -ex \
     && rm -rf /acme_src /var/cache/apk/* \
     && mkdir /etc/nginx/ssl \
     && mkdir /etc/nginx/ssl/app \
-    && mkdir /etc/nginx/ssl/default
 
 COPY ./nginx.conf /etc/nginx/nginx.conf
 COPY ./default.conf /etc/nginx/conf.d/default.conf

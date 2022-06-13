@@ -4,25 +4,24 @@
 DOMAINS=$(echo "$DOMAINS" | tr -s ' ')
 SslServer="$SslServer"
 mail="$mail"
+SSL_DIR="/etc/nginx/ssl/app/"
 
 if [ -z "$DOMAINS" ]; then
   echo "[$(date)] Empty env var DOMAINS"
 #  exit 1
 fi
 
-mkdir -p /etc/nginx/ssl/default/
-mkdir -p /etc/nginx/ssl/app/
+mkdir -p ${SSL_DIR}/
 
 function CreateDefault() {
-  if [ -e "/etc/nginx/ssl/app/cert.pem" ]; then
+  if [ -e "${SSL_DIR}/cert.pem" ]; then
     echo "[$(date)] default cert exists"
   else
     openssl req -x509 -newkey rsa:4096 -nodes -days 365 \
       -subj "/C=CA/ST=QC/O=Company Inc/CN=example.com" \
-      -out /etc/nginx/ssl/default/cert.pem \
-      -keyout /etc/nginx/ssl/default/key.pem
-    cp /etc/nginx/ssl/default/*.pem  /etc/nginx/ssl/app/
-    chmod +w /etc/nginx/ssl/app/*
+      -out ${SSL_DIR}/cert.pem \
+      -keyout ${SSL_DIR}/key.pem
+    chmod +w ${SSL_DIR}/*
   fi
 }
 
@@ -59,9 +58,9 @@ function StartAcmesh() {
 
   echo "[$(date)] acme.sh install-cert .."
   /root/.acme.sh/acme.sh --install-cert $ACME_DOMAIN_OPTION \
-    --fullchain-file /etc/nginx/ssl/app/fullchain.pem \
-    --cert-file /etc/nginx/ssl/app/cert.pem \
-    --key-file /etc/nginx/ssl/app/key.pem \
+    --fullchain-file ${SSL_DIR}/fullchain.pem \
+    --cert-file ${SSL_DIR}/cert.pem \
+    --key-file ${SSL_DIR}/key.pem \
     --reloadcmd "nginx -s reload"
 
   echo "[$(date)] Start cron"
