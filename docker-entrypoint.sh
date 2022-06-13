@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# author by xiaojun207
 
 DOMAINS=$(echo "$DOMAINS" | tr -s ' ')
 SslServer="$SslServer"
