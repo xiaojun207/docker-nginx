@@ -4,8 +4,8 @@
 DOMAINS=$(echo "$DOMAINS" | tr -s ' ')
 SslServer="$SslServer"
 mail="$mail"
-SSL_DIR="/etc/nginx/ssl/app/"
-RELOAD_CMD="nginx -s reload"
+export SSL_DIR="/etc/nginx/ssl/app"
+export RELOAD_CMD="nginx -s reload"
 
 if [ -z "$mail" ]; then
   echo "[$(date)] Empty env var mail"
@@ -21,8 +21,9 @@ mkdir -p ${SSL_DIR}/
 
 function CreateDefault() {
   if [ -e "${SSL_DIR}/cert.pem" ]; then
-    echo "[$(date)] default cert exists"
+    echo "[$(date)] default cert exists in :${SSL_DIR}"
   else
+    echo "[$(date)] create default cert to :${SSL_DIR}"
     openssl req -x509 -newkey rsa:4096 -nodes -days 365 \
       -subj "/C=CA/ST=QC/O=Company Inc/CN=example.com" \
       -out ${SSL_DIR}/cert.pem \
@@ -35,6 +36,9 @@ function StartAcmesh() {
   echo "[$(date)] sleep 2 second to start Acme.sh..."
   sleep 2
   echo "[$(date)] Start Acme.sh..."
+  echo "[$(date)] SSL_DIR :${SSL_DIR}"
+  echo "[$(date)] mail :${mail}"
+  echo "[$(date)] RELOAD_CMD :${RELOAD_CMD}"
 
   IFS=' '
   read -ra list <<<"$DOMAINS"
@@ -65,11 +69,11 @@ function StartAcmesh() {
   echo "[$(date)] acme.sh install-cert .."
   /root/.acme.sh/acme.sh --install-cert $ACME_DOMAIN_OPTION \
     --fullchain-file ${SSL_DIR}/fullchain.pem \
-    --cert-file ${SSL_DIR}/cert.pem \
+    --cert-file "${SSL_DIR}/cert.pem" \
     --key-file ${SSL_DIR}/key.pem \
     --reloadcmd "${RELOAD_CMD}"
 
-  echo "[$(date)] Start cron"
+  echo "[$(date)] Start acme.sh crond "
   crond
 }
 
@@ -78,7 +82,7 @@ CreateDefault
 
 if [[ -n "$DOMAINS" ]]; then
   export -f StartAcmesh
-  nohup bash -c StartAcmesh &
+  nohup bash -c StartAcmesh "${SSL_DIR}" "${RELOAD_CMD}" &
 fi
 
 echo "[$(date)] Start nginx"
