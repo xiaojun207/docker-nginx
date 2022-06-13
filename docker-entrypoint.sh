@@ -5,6 +5,7 @@ DOMAINS=$(echo "$DOMAINS" | tr -s ' ')
 SslServer="$SslServer"
 mail="$mail"
 SSL_DIR="/etc/nginx/ssl/app/"
+RELOAD_CMD="nginx -s reload"
 
 if [ -z "$mail" ]; then
   echo "[$(date)] Empty env var mail"
@@ -59,14 +60,14 @@ function StartAcmesh() {
   /root/.acme.sh/acme.sh --register-account -m $mail
 
   echo "[$(date)] acme.sh issue .."
-  /root/.acme.sh/acme.sh --issue --nginx --debug $ACME_DOMAIN_OPTION --renew-hook "nginx -s reload"
+  /root/.acme.sh/acme.sh --issue --nginx --debug $ACME_DOMAIN_OPTION --renew-hook "${RELOAD_CMD}"
 
   echo "[$(date)] acme.sh install-cert .."
   /root/.acme.sh/acme.sh --install-cert $ACME_DOMAIN_OPTION \
     --fullchain-file ${SSL_DIR}/fullchain.pem \
     --cert-file ${SSL_DIR}/cert.pem \
     --key-file ${SSL_DIR}/key.pem \
-    --reloadcmd "nginx -s reload"
+    --reloadcmd "${RELOAD_CMD}"
 
   echo "[$(date)] Start cron"
   crond
