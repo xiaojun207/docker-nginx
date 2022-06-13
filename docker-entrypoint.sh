@@ -6,6 +6,11 @@ SslServer="$SslServer"
 mail="$mail"
 SSL_DIR="/etc/nginx/ssl/app/"
 
+if [ -z "$mail" ]; then
+  echo "[$(date)] Empty env var mail"
+  mail="youmail@example.com"
+fi
+
 if [ -z "$DOMAINS" ]; then
   echo "[$(date)] Empty env var DOMAINS"
 #  exit 1
