@@ -20,7 +20,7 @@ function build() {
     exit 1
   fi
 
-  TAG_LATEST="${MAJOR}.${MINOR}-latest"
+  TAG_LATEST="${MAJOR}.${MINOR}"
   TAG_SPECIAL="${MAJOR}.${MINOR}.${PATCH}"
 
   docker buildx build \
