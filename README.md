@@ -12,6 +12,11 @@ arch: linux/amd64, linux/arm64
 
 This is a Nginx image with auto ssl，use acme.sh， you can set default-ca,like: zerossl, letsencrypt，buypass，ssl ...
 
+# Openresty镜像github地址
+https://github.com/xiaojun207/docker-openresty
+
+# Nginx镜像github地址
+https://github.com/xiaojun207/docker-nginx
 
 # 快速启动(Quick Start)
 
