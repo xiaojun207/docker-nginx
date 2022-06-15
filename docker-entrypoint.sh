@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
 # author by xiaojun207
 
-DOMAINS=$(echo "$DOMAINS" | tr -s ' ')
-SslServer="$SslServer"
-mail="$mail"
-export SSL_DIR="/etc/nginx/ssl/app"
+export DOMAINS=$(echo "$SslDomains" | tr -s ';')
+export SslServer="$SslServer"
+export mail="$mail"
+export SSL_DIR="/etc/nginx/ssl"
 export RELOAD_CMD="nginx -s reload"
 
 if [ -z "$mail" ]; then
-  echo "[$(date)] Empty env var mail"
+  echo "[$(date)] Empty env var mail, set mail=\"youmail@example.com\""
   mail="youmail@example.com"
 fi
 
 if [ -z "$DOMAINS" ]; then
-  echo "[$(date)] Empty env var DOMAINS"
-#  exit 1
+  echo "[$(date)] Empty env var SslDomains"
 fi
 
 mkdir -p ${SSL_DIR}/
 
 function CreateDefault() {
-  if [ -e "${SSL_DIR}/cert.pem" ]; then
+  # true if the file exists and is not empty
+  if [ -s "${SSL_DIR}/cert.pem" ]; then
     echo "[$(date)] default cert exists in :${SSL_DIR}"
   else
     echo "[$(date)] create default cert to :${SSL_DIR}"
@@ -51,6 +51,10 @@ function StartAcmesh() {
     else
       ACME_DOMAIN_OPTION+=" -d ${list[$i]}"
     fi
+
+    if [[ -n "$dns" ]]; then
+       ACME_DOMAIN_OPTION+=" --dns $dns"
+    fi
   done
 
   echo "[$(date)] Issue the cert: $DOMAINS with options $ACME_DOMAIN_OPTION"
@@ -78,8 +82,7 @@ function StartAcmesh() {
 }
 
 if [[ -n "$DOMAINS" ]]; then
-
-  # 生成默认证书, 配置文件中使用，否则nginx启动会失败
+  echo "[$(date)] 生成默认证书, 配置文件中使用，否则nginx启动会失败"
   CreateDefault
 
   export -f StartAcmesh
