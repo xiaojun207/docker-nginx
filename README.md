@@ -12,6 +12,8 @@ arch: linux/amd64, linux/arm64
 
 This is a Nginx image with auto ssl，use acme.sh， you can set default-ca,like: zerossl, letsencrypt，buypass，ssl ...
 
+当然，你也可以把它当普通的nginx镜像使用。当入参DOMAINS为空（-e DOMAINS="" 或 不填），不会启动证书acme（证书获取程序）。
+
 # Openresty镜像github地址
 https://github.com/xiaojun207/docker-openresty
 
@@ -36,17 +38,20 @@ https://github.com/xiaojun207/docker-nginx
       -e mail="youmail@example.com" \
       --name nginx xiaojun207/nginx:latest
 ```
-注意：建议把路径/etc/nginx/ssl、/acme_cert中的内容都持久化到宿主机保存，避免容器删除后，启动后会自动再次获取（频繁申请证书会被服务商限制）。
+注意：
+* 1、建议把路径/etc/nginx/ssl、/acme_cert中的内容都持久化到宿主机保存，避免容器删除后，启动后会自动再次获取（频繁申请证书会被服务商限制）。
+* 2、不要改变nginx.conf的路径，否则证书生成会失败。
+* 3、测试部署时，建议使用letsencrypt的测试地址（即参数，-e SslServer="https://acme-staging-v02.api.letsencrypt.org/directory"）。
 
 # 使用说明
-默认情况下, 使用的是服务器验证，所以请确保，被申请ssl的域名可以访问到nginx容器。
+默认情况下, 使用的是服务器验证方式(非dns方式)，所以请确保，需要申请证书的域名可以正常访问到nginx容器（正确访问http端口）。
 
 # 参数说明
 
 | 参数         | 是否必填 | 说明                                                                                                                                     |
 |------------|------|----------------------------------------------------------------------------------------------------------------------------------------|
 | DOMAINS    | 必填   | 域名列表参数是acme用来自动获取ssl，多域名以空格分隔。如果为空或不填，这就是个普通的nginx镜像，哈哈。                                                                               |
-| mail       | 必填   | 你的邮箱，用于获取ssl时配置                                                                                                                        |
+| mail       | 必填   | 你的邮箱，用于获取ssl时配置，有的证书服务商有网页管理端，可以根据邮箱查看相关的证书。如果为空可能会导致注册到证书服务商失败，因此如果参数为空会使用默认邮箱。                                                                                                 |
 | SslServer  | 否    | 证书服务商（名字或地址），默认：zerossl，你还可以使用：letsencrypt，buypass，ssl等等，<br>或者letsencrypt的测试地址：https://acme-staging-v02.api.letsencrypt.org/directory |
 
 # 证书路径和nginx配置方法

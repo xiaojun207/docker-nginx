@@ -77,10 +77,11 @@ function StartAcmesh() {
   crond
 }
 
-# 生成默认证书, 配置文件中使用，否则nginx启动会失败
-CreateDefault
-
 if [[ -n "$DOMAINS" ]]; then
+
+  # 生成默认证书, 配置文件中使用，否则nginx启动会失败
+  CreateDefault
+
   export -f StartAcmesh
   nohup bash -c StartAcmesh "${SSL_DIR}" "${RELOAD_CMD}" &
 fi
