@@ -20,13 +20,13 @@ mkdir -p ${SSL_DIR}/
 
 function CreateDefault() {
   # true if the file exists and is not empty
-  if [ -s "${SSL_DIR}/cert.pem" ]; then
+  if [ -s "${SSL_DIR}/fullchain.pem" ]; then
     echo "[$(date)] default cert exists in :${SSL_DIR}"
   else
     echo "[$(date)] create default cert to :${SSL_DIR}"
     openssl req -x509 -newkey rsa:4096 -nodes -days 365 \
       -subj "/C=CA/ST=QC/O=Company Inc/CN=example.com" \
-      -out ${SSL_DIR}/cert.pem \
+      -out ${SSL_DIR}/fullchain.pem \
       -keyout ${SSL_DIR}/key.pem
     chmod +w ${SSL_DIR}/*
   fi

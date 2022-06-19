@@ -73,7 +73,7 @@ nginx配置方法如下：
         root /data/web/www;
     
         ssl_stapling off;
-        ssl_certificate /etc/nginx/ssl/cert.pem; # 证书自动安装的路径
+        ssl_certificate /etc/nginx/ssl/fullchain.pem; # 证书自动安装的路径
         ssl_certificate_key /etc/nginx/ssl/key.pem; # 证书自动安装的路径
     
         # ...
