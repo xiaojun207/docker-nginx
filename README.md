@@ -12,7 +12,7 @@ arch: linux/amd64, linux/arm64
 
 This is a Nginx image with auto ssl，use acme.sh， you can set default-ca,like: zerossl, letsencrypt，buypass，ssl ...
 
-当然，你也可以把它当普通的nginx镜像使用。当入参DOMAINS为空（-e DOMAINS="" 或 不填），不会启动证书acme（证书获取程序）。
+当然，你也可以把它当普通的nginx镜像使用。当入参SslDomains为空（-e SslDomains="" 或 不填），不会启动证书acme（证书获取程序）。
 
 # Openresty镜像github地址
 https://github.com/xiaojun207/docker-openresty
