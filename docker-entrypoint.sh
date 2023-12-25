@@ -64,13 +64,13 @@ function StartAcmesh() {
     /root/.acme.sh/acme.sh --set-default-ca --server $SslServer
   fi
 
-  echo "[$(date)] acme.sh register .."
+  echo "[$(date)] 1、acme.sh register .."
   /root/.acme.sh/acme.sh --register-account -m $mail
 
-  echo "[$(date)] acme.sh issue .."
+  echo "[$(date)] 2、acme.sh issue .."
   /root/.acme.sh/acme.sh --issue --nginx $ACME_DOMAIN_OPTION --renew-hook "${RELOAD_CMD}"
 
-  echo "[$(date)] acme.sh install-cert .."
+  echo "[$(date)] 3、acme.sh install-cert .."
   /root/.acme.sh/acme.sh --install-cert $ACME_DOMAIN_OPTION \
     --fullchain-file ${SSL_DIR}/fullchain.pem \
     --cert-file "${SSL_DIR}/cert.pem" \

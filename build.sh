@@ -6,7 +6,7 @@ IMAGE=xiaojun207/nginx
 # 版本信息来自nginx官方镜像
 # https://hub.docker.com/_/nginx?tab=tags
 NGINX_VERSIONS=(
-  1.23.0
+  1.25.3
 )
 
 function build() {
@@ -23,8 +23,8 @@ function build() {
   TAG_LATEST="${MAJOR}.${MINOR}"
   TAG_SPECIAL="${MAJOR}.${MINOR}.${PATCH}"
 
-  docker buildx build \
-    --platform linux/amd64,linux/arm64 \
+#    --platform linux/amd64,linux/arm64 \
+  docker build \
     --build-arg NGINX_VERSION="$NGINX_VERSION" \
     --tag $IMAGE:"latest" \
     --tag $IMAGE:"$TAG_LATEST" \
