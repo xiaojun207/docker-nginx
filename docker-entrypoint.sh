@@ -46,18 +46,23 @@ function StartAcmesh() {
   ACME_DOMAIN_OPTION=""
 
   for i in "${!list[@]}"; do
+    if [[ -n "$dns" ]]; then
+       ACME_DOMAIN_OPTION+=" --dns $dns"
+    fi
     if [[ $i == 0 ]]; then
       ACME_DOMAIN_OPTION+="-d ${list[$i]}"
     else
       ACME_DOMAIN_OPTION+=" -d ${list[$i]}"
     fi
-
-    if [[ -n "$dns" ]]; then
-       ACME_DOMAIN_OPTION+=" --dns $dns"
-    fi
   done
 
-  echo "[$(date)] Issue the cert: $DOMAINS with options $ACME_DOMAIN_OPTION"
+  if [[ -n "$dns" ]]; then
+     echo "[$(date)] Use dns plugin: $dns"
+  else
+     ACME_DOMAIN_OPTION+=" --nginx "
+  fi
+
+  echo "[$(date)] Issue the cert: $DOMAINS with options: $ACME_DOMAIN_OPTION"
 
   if [[ -n "$SslServer" ]]; then
     # 测试环境 https://acme-staging-v02.api.letsencrypt.org/directory

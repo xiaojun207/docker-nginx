@@ -6,7 +6,7 @@ IMAGE=xiaojun207/nginx
 # 版本信息来自nginx官方镜像
 # https://hub.docker.com/_/nginx?tab=tags
 NGINX_VERSIONS=(
-  1.25.3
+  1.27.2
 )
 
 function build() {
