@@ -1,4 +1,4 @@
-ARG NGINX_VERSION=1.27.2
+ARG NGINX_VERSION=1.29.3
 FROM nginx:${NGINX_VERSION}-alpine
 
 LABEL maintainer="xiaojun207 <xiaojun207@126.com>"
